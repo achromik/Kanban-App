@@ -35,7 +35,7 @@ export function getLanes(req, res) {
 }
 
 export function editLane(req, res) {
-  const lane = req.body
+  const lane = req.body;
   if(!lane.id || !lane.name) {
     res.status(403).end();
   }
@@ -43,7 +43,7 @@ export function editLane(req, res) {
     if(err) {
       res.status(500).send(err);
     }
-    res.json({updated});
+    res.json(updated);
   })
 }
 
