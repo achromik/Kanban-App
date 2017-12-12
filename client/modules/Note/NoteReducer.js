@@ -19,8 +19,8 @@ const notes = (state = initialState, action) => {
     case DELETE_NOTE:
       return omit(state, action.noteId)
 
-    case CREATE_NOTES:
-      return { ...action.notes}
+    case CREATE_NOTES: 
+      return { ...state, ...action.notes}
 
     default:
       return state;

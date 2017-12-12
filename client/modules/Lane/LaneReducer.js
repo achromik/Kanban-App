@@ -17,8 +17,9 @@ const lanes = (state = initialState, action) => {
       return { ...state, [action.id]: lane };
     }  
 
-    case CREATE_LANES:
-      return { ...action.lanes };
+    case CREATE_LANES: 
+      return { ...state, ...action.lanes };
+
 
     case DELETE_LANE:
       return omit(state, action.laneId); 

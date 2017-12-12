@@ -7,9 +7,8 @@ import Edit from '../../components/Edit';
 import { updateLane, editLane, deleteLane } from './LaneActions';
 
 const Lane = (props) => {
-  const { lane, laneNotes, updateLane, addNote, deleteLane } = props;
+  const { lane, laneNotes, updateLane, addNote, deleteLane, editLane } = props;
   const laneId = lane.id;
-
   return (
     <div className={styles.Lane}>
       <div className={styles.LaneHeader}>
@@ -41,6 +40,7 @@ Lane.propTypes = {
   addNote: PropTypes.func,
   updateLane: PropTypes.func,
   deleteLane: PropTypes.func,
+  editLane: PropTypes.func,
 };
 
 export default Lane;
