@@ -18,14 +18,14 @@ class Lane extends React.Component {
             className={styles.LaneName}
             editing={lane.editing}
             value={lane.name}
-            onValueClick={() => editLane(lane.id)}
+            onValueClick={() => editLane(laneId)}
             onUpdate={name => updateLane({...lane, name, editing: false})}
           />
           <div className={styles.LaneAddNote}>
             <button onClick={() => addNote({task: 'New Note'}, laneId)}>Add Note</button>
           </div>
           <div className={styles.LaneDelete}>
-            <button onClick={() => deleteLane(laneId)}>Remove lane</button>
+            <button onClick={() => deleteLane(lane)}>Remove lane</button>
           </div>
         </div>
         <NotesContainer

@@ -20,9 +20,22 @@ const noteTarget = {
 
   drop(targetProps, monitor) {
     const sourceProps = monitor.getItem();
-    const { id: noteId, laneId: sourceLaneId } = sourceProps;
+    const { id: noteId, laneId: sourceLaneId, _id: note_id} = sourceProps;
+
+    //Move and drop a note from one lane (source) to another lane (target)
     if (targetProps.lane.id !== sourceLaneId) {
-      targetProps.changeLanesRequest(sourceLaneId, targetProps.lane.id, noteId);
+
+      const newTargetNotes = targetProps.laneNotes.map(note => note._id)
+      newTargetNotes.push(note_id);
+      
+      targetProps.changeLanesRequest(sourceLaneId, targetProps.lane.id, noteId, newTargetNotes);
+
+    //Drop a note inside a lane (change position of note)  
+    } else {
+
+      const notes = targetProps.laneNotes.map(note => note._id)
+
+      callApi('lanes','put', {id: sourceLaneId, notes: notes})
     }
 
   },

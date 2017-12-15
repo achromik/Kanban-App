@@ -6,6 +6,7 @@ import ItemTypes from '../Kanban/itemTypes';
 // Import Style
 import styles from './Note.css';
 import { connect } from 'react-redux';
+import callApi from '../../util/apiCaller';
 
 
 class Note extends React.Component { 
@@ -17,7 +18,6 @@ class Note extends React.Component {
       editing, 
       children 
     } = this.props;
-   
     const dragSource = editing ? a => a : connectDragSource;
 
     return dragSource(connectDropTarget(
@@ -43,18 +43,13 @@ const noteSource = {
   isDragging(props, monitor) {
     return props.id === monitor.getItem().id;
   },
-
-  endDrag(props, monitor, component) {
-        
-  }
-
 };
 
 const noteTarget = {
-
   hover(targetProps, monitor) {
     const sourceProps = monitor.getItem();
-   
+    
+    //Move a note inside a lane (change position of note)  
     if(targetProps.id !== sourceProps.id && targetProps.laneId === sourceProps.laneId  ) {
       targetProps.moveWithinLane(targetProps.laneId, targetProps.id, sourceProps.id);
     } 

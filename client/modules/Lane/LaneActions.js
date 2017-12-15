@@ -3,7 +3,8 @@ import omit from 'lodash/omit';
 
 import { lanes } from '../../util/schema';
 import { normalize } from 'normalizr';
-import { createNotesRequest, createNotes } from "../Note/NoteActions";
+import { createNotesRequest, createNotes, deleteNote } from "../Note/NoteActions";
+
 
 // Export Constants
 export const CREATE_LANE = 'CREATE_LANE';
@@ -49,11 +50,15 @@ export function deleteLane(laneId) {
   };
 }
 
-export function deleteLaneRequest(laneId) {
+export function deleteLaneRequest(lane) {
   return(dispatch) => {
-    return callApi(`lanes/${laneId}`, 'delete').then(() => {
-      dispatch(deleteLane(laneId));
-    })
+    return  callApi(`lanes/${lane.id}`, 'delete')
+      .then( () => {
+        lane.notes.forEach( note => { 
+          dispatch(deleteNote( note, lane.id))
+        })
+        dispatch(deleteLane(lane.id));
+      })
   }
 }
 
@@ -115,13 +120,20 @@ export function pushToLane(targetLaneId, noteId) {
   }
 }
 
-export function changeLanesRequest(sourceLaneId, targetLaneId, noteId) {
+export function changeLanesRequest(sourceLaneId, targetLaneId, noteId, newNotes) {
   return (dispatch) => {
-    return callApi(`notes/${noteId}`, 'delete')
+    return callApi(`lanes`)
+
       .then((res) => {
-        console.log(res)
-        callApi('notes', 'post', { laneId: targetLaneId, note: res })
+        const newSourceLane = res.lanes.find(lane => lane.id === sourceLaneId);
+        const newSourceNotes= newSourceLane.notes.filter(note => note.id !== noteId).map(note => note._id)
+        callApi('lanes','put', {id: sourceLaneId, notes: newSourceNotes})
       })
+      
+      .then((res) => {
+        callApi('lanes','put', {id: targetLaneId, notes: newNotes})
+      })
+
       .then(() => {
         dispatch(removeFromLane(
           sourceLaneId,
@@ -133,5 +145,8 @@ export function changeLanesRequest(sourceLaneId, targetLaneId, noteId) {
         ));
       }
     )
+    .catch(err => {
+      console.log(err);
+    })
   }
 }

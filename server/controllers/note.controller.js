@@ -61,12 +61,9 @@ export function deleteNoteFromLane(req, res) {
         lane.notes.pull(note);
         
         lane.save();
-      })
-      .then(() => {
-        note.remove(() => {
-          res.status(200).send(note);
-        })
-      })
+      });
+
+      res.status(200).send(note);
     } else {
       res.status(500).send('Bad argument!');
     }
