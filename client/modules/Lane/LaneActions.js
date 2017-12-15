@@ -11,6 +11,10 @@ export const DELETE_LANE = 'DELETE_LANE';
 export const UPDATE_LANE = 'UPDATE_LANE';
 export const EDIT_LANE = 'EDIT_LANE';
 export const CREATE_LANES = 'CREATE_LANES';
+export const MOVE_BETWEEN_LANES = 'MOVE_BETWEEN_LANES';
+export const REMOVE_FROM_LANE = 'REMOVE_FROM_LANE';
+export const PUSH_TO_LANE = 'PUSH_TO_LANE';
+
 
 // Export Actions
 export function createLane(lane) {
@@ -84,4 +88,50 @@ export function createLaneRequest(lane) {
       dispatch(createLane(res));
     });
   } 
+}
+
+export function moveBetweenLanes(targetLaneId, noteId, sourceLaneId) {
+  return {
+    type: MOVE_BETWEEN_LANES,
+    targetLaneId,
+    noteId,
+    sourceLaneId,
+  }
+}
+
+export function removeFromLane(sourceLaneId, noteId) {
+  return {
+    type: REMOVE_FROM_LANE,
+    sourceLaneId,
+    noteId,
+  }
+}
+
+export function pushToLane(targetLaneId, noteId) {
+  return {
+    type: PUSH_TO_LANE,
+    targetLaneId,
+    noteId,
+  }
+}
+
+export function changeLanesRequest(sourceLaneId, targetLaneId, noteId) {
+  return (dispatch) => {
+    return callApi(`notes/${noteId}`, 'delete')
+      .then((res) => {
+        console.log(res)
+        callApi('notes', 'post', { laneId: targetLaneId, note: res })
+      })
+      .then(() => {
+        dispatch(removeFromLane(
+          sourceLaneId,
+          noteId,
+        ));
+        dispatch(pushToLane(
+          targetLaneId,
+          noteId,
+        ));
+      }
+    )
+  }
 }

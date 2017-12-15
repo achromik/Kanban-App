@@ -4,35 +4,38 @@ import NotesContainer from '../Note/NoteContainer.js';
 import styles from './Lane.css';
 
 import Edit from '../../components/Edit';
-//import { updateLane, editLane, deleteLane } from './LaneActions';
 
-const Lane = (props) => {
-  const { lane, laneNotes, updateLane, addNote, deleteLane, editLane } = props;
-  const laneId = lane.id;
-  return (
-    <div className={styles.Lane}>
-      <div className={styles.LaneHeader}>
-        <div className={styles.LaneAddNote}>
-          <button onClick={() => addNote({task: 'New Note'}, laneId)}>Add Note</button>
+
+class Lane extends React.Component {
+  render() {  
+    const { connectDropTarget, lane, laneNotes, updateLane, addNote, deleteLane, editLane } = this.props;
+    const laneId = lane.id;
+
+    return connectDropTarget(
+      <div className={styles.Lane}>
+        <div className={styles.LaneHeader}>
+          <Edit 
+            className={styles.LaneName}
+            editing={lane.editing}
+            value={lane.name}
+            onValueClick={() => editLane(lane.id)}
+            onUpdate={name => updateLane({...lane, name, editing: false})}
+          />
+          <div className={styles.LaneAddNote}>
+            <button onClick={() => addNote({task: 'New Note'}, laneId)}>Add Note</button>
+          </div>
+          <div className={styles.LaneDelete}>
+            <button onClick={() => deleteLane(laneId)}>Remove lane</button>
+          </div>
         </div>
-        <Edit 
-          className={styles.LaneName}
-          editing={lane.editing}
-          value={lane.name}
-          onValueClick={() => editLane(lane.id)}
-          onUpdate={name => updateLane({...lane, name, editing: false})}
+        <NotesContainer
+          notes={laneNotes}
+          laneId={laneId}
         />
-        <div className={styles.LaneDelete}>
-          <button onClick={() => deleteLane(laneId)}>Remove lane</button>
-        </div>
       </div>
-      <NotesContainer
-        notes={laneNotes}
-        laneId={laneId}
-      />
-    </div>
-  );
-};
+    );
+  };
+}
 
 Lane.propTypes = {
   lane: PropTypes.object,

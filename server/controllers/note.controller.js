@@ -8,7 +8,6 @@ export function getSomething(req, res) {
 
 export function addNote(req, res) {
   const { note, laneId } = req.body;
-
   if(!note || !note.task || !laneId) {
     res.status(400).end();
   }
@@ -17,7 +16,9 @@ export function addNote(req, res) {
     task: note.task
   });
 
-  newNote.id = uuid();
+  note.id 
+  ? newNote.id = note.id
+  : newNote.id = uuid();
   newNote.save((err, saved) => {
     if(err) {
       res.status(500).send(err);
@@ -63,7 +64,7 @@ export function deleteNoteFromLane(req, res) {
       })
       .then(() => {
         note.remove(() => {
-          res.status(200).send('Note deleted succesfull');
+          res.status(200).send(note);
         })
       })
     } else {

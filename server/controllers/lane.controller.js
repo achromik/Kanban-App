@@ -36,7 +36,7 @@ export function getLanes(req, res) {
 
 export function editLane(req, res) {
   const lane = req.body;
-  if(!lane.id || !lane.name) {
+  if(!lane.id ) {
     res.status(403).end();
   }
   Lane.findOneAndUpdate({id: lane.id}, lane, {new: true}, (err, updated) => {

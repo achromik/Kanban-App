@@ -36,11 +36,14 @@ export default class Edit extends Component {
   renderEdit = () => {
     return (
       <input 
+        ref="input"
+        className={styles.inputValue}
         type="text"
         autoFocus
         defaultValue={this.props.value}
         onBlur={this.finishEdit}
         onKeyPress={this.checkEnter}
+        onFocus={(e) => {e.target.select() }}
       />
     )
   };
